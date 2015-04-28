@@ -203,6 +203,26 @@ describe("shmock", function() {
       });
     });
 
+    it("Should lazily evaluate a response body function", function(done) {
+
+      var responseBodyFunction = function() {
+        return {
+          time: new Date().getTime()
+        }
+      };
+
+      mock.get("/time").reply(200, responseBodyFunction);
+
+      test.get("/time").expect(200).end(function(error, response) {
+        var firstTime = response.body.time;
+        test.get("/time").expect(200).end(function(error, response) {
+            var secondTime = response.body.time;
+            assert.notEqual(firstTime, secondTime, "Response body function was supposed to be lazily evaluated and to produce separate responses on separate invocations");
+            done();
+        });
+      });
+    });
+
     describe("skipUnmatchedRequests mode: ", function() {
       it("Should pass unmatched requests to the next handler", function(done) {
 

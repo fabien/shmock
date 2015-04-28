@@ -134,7 +134,12 @@ Assertion.prototype.reply = function(status, responseBody, responseHeaders) {
           self.app._router.map[self.method].splice(req._route_index, 1);
         }
 
-        res.status(status).send(responseBody);
+        if (typeof responseBody === 'function') {
+          res.status(status).send(responseBody());
+        } else {
+          res.status(status).send(responseBody);
+        }
+
       };
 
       if(self.delay_ms) {
