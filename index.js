@@ -135,7 +135,7 @@ Assertion.prototype.reply = function(status, responseBody, responseHeaders) {
         }
 
         if (typeof responseBody === 'function') {
-          res.status(status).send(responseBody());
+          res.status(status).send(responseBody(req, res));
         } else {
           res.status(status).send(responseBody);
         }
