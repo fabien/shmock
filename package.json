@@ -9,7 +9,7 @@
     "mock"
   ],
   "dependencies": {
-    "express": "~3.4.8",
+    "express": "4.x",
     "methods": "~0.1.0",
     "deep-equal": "0.2.1"
   },
