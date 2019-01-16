@@ -5,6 +5,7 @@ var querystring = require("querystring");
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
 var deepEqual = require('deep-equal');
+var bodyParser = require('body-parser')
 
 module.exports = function(port, middlewares) {
   var app = express();
@@ -13,8 +14,8 @@ module.exports = function(port, middlewares) {
     throw err;
   });
 
-  app.use(express.json());
-  app.use(express.urlencoded());
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: true }));
 
   // If the user has defined custom middlewares...
   if(middlewares) {
@@ -50,7 +51,7 @@ module.exports = function(port, middlewares) {
   });
 
   server.clean = function() {
-    app._router.map = {};
+    deleteRoutes(app._router.stack);
   }
 
   return server;
@@ -131,7 +132,7 @@ Assertion.prototype.reply = function(status, responseBody, responseHeaders) {
         // Remove route from express since the expectation was met
         // Unless this mock is suposed to persist
         if (self.removeWhenMet) {
-          self.app._router.map[self.method].splice(req._route_index, 1);
+          deleteRoute(self.app._router.stack, req.route);
         }
 
         if (typeof responseBody === 'function') {
@@ -237,3 +238,26 @@ Handler.prototype.wait = function(ms, fn) {
     fn(new Error(self.assertion.method + " " + self.assertion.path + " was not called within " + ms + "ms."));
   }, ms);
 }
+
+function deleteRoutes(stack) {
+  var routes = [];
+  for (var i = 0; i < stack.length; i++) {
+    if (stack[i].route) {
+       routes.push(stack[i].route);
+    }
+  }
+  for (var i = 0; i < routes.length; i++) {
+    deleteRoute(stack, routes[i]);
+  }
+};
+
+function deleteRoute(stack, route) {
+  var index = -1;
+  for (var i = 0; i < stack.length; i++) {
+    if (stack[i].route === route) {
+      index = i;
+      break;
+    }
+  }
+  if (index > -1) stack.splice(index, 1);
+};
