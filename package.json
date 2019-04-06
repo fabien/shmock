@@ -1,5 +1,5 @@
 {
-  "name": "shmock",
+  "name": "@atelierfabien/shmock",
   "version": "0.7.3",
   "description": "Simple HTTP Mocking library",
   "keywords": [
@@ -26,11 +26,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/xetorthio/shmock.git"
+    "url": "https://github.com/fabien/shmock.git"
   },
   "readmeFilename": "Readme.md",
   "bugs": {
-    "url": "https://github.com/xetorthio/shmock/issues"
+    "url": "https://github.com/fabien/shmock/issues"
   },
-  "homepage": "https://github.com/xetorthio/shmock"
+  "homepage": "https://github.com/fabien/shmock"
 }
